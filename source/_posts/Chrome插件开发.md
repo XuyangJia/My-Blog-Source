@@ -1,9 +1,11 @@
 ---
 title: Chrome插件开发Demo
 date: 2019-03-18 22:13:36
+categories:
+- Chrome
 tags:
 ---
-<!-- ![](https://images2015.cnblogs.com/blog/352797/201707/352797-20170711100448275-555008903.png) -->
+![](/images/chrome_extension.jpg)
 对于一个前端developer来说，chrome插件的开发非常简单，几个简单的文件就能轻松搞定。
 ## 插件的目录结构
    ~~~
