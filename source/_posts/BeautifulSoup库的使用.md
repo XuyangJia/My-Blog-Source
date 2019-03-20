@@ -9,6 +9,7 @@ tags:
 ---
 >Beautiful Soup 是一个可以从HTML或XML文件中提取数据的Python库.它能够通过你喜欢的转换器实现惯用的文档导航,查找,修改文档的方式.Beautiful Soup会帮你节省数小时甚至数天的工作时间.
 > \- [Beautiful Soup 4 文档][bs4]
+本文为学习BeautifulSoup时所做的笔记，详细内容请查看[官方文档][bs4]
 ---
 # 使用BeautifulSoup解析下面这段代码
 ~~~ python
