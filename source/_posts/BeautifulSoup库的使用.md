@@ -8,7 +8,7 @@ tags:
 - 爬虫
 ---
 >Beautiful Soup 是一个可以从HTML或XML文件中提取数据的Python库.它能够通过你喜欢的转换器实现惯用的文档导航,查找,修改文档的方式.Beautiful Soup会帮你节省数小时甚至数天的工作时间.
-> \- [Beautiful Soup 4.2.0 文档][bs4]
+> \- [Beautiful Soup 4 文档][bs4]
 ---
 # 使用BeautifulSoup解析下面这段代码
 ~~~ python
@@ -71,5 +71,6 @@ html5lib|BeautifulSoup(markup, "html5lib")|最好的容错性<br>以浏览器的
 推荐使用lxml作为解析器，因为xml效率更高。
 # 基本用法
 Beautiful Soup将复杂HTML文档转换成一个复杂的树形结构，每个节点都是Python对象，所有对象可以归纳为4种: Tag，NavigableString，BeautifulSoup，Comment。
+
 
 [bs4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc.zh/
