@@ -12,5 +12,8 @@ and they lived at the bottom of a well.</p>
 <p class="story">...</p>
 """
 from bs4 import BeautifulSoup
+import re
+
 soup = BeautifulSoup(html_doc, 'lxml')
-print(soup.find(id='link3'))
+result = soup.select('#link1')
+print(result)
