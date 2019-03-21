@@ -503,7 +503,163 @@ multilingual_soup.select('p[lang|=en]')
 # [<p lang="en">Hello</p>,
 ~~~
 # 修改文档树
+## 修改tag的名称和属性,重命名一个tag
 ~~~ python
+soup = BeautifulSoup('<b class="boldest">Extremely bold</b>')
+tag = soup.b
+
+tag.name = "blockquote"
+tag['class'] = 'verybold'
+tag['id'] = 1
+tag
+# <blockquote class="verybold" id="1">Extremely bold</blockquote>
+
+del tag['class']
+del tag['id']
+tag
+# <blockquote>Extremely bold</blockquote>
+~~~
+## 修改 .string
+给tag的 .string 属性赋值,就相当于用当前的内容替代了原来的内容
+~~~ python
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup)
+
+tag = soup.a
+tag.string = "New link text."
+tag
+# <a href="http://example.com/">New link text.</a>
+~~~
+## append()
+Tag.append() 方法想tag中添加内容,就好像Python的列表的 .append() 方法
+~~~ python
+soup = BeautifulSoup("<a>Foo</a>")
+soup.a.append("Bar")
+
+soup
+# <html><head></head><body><a>FooBar</a></body></html>
+soup.a.contents
+# [u'Foo', u'Bar']
+~~~
+## BeautifulSoup.new_string() 和 .new_tag()
+如果想添加一段文本内容到文档中也没问题,可以调用Python的 append() 方法或调用工厂方法 BeautifulSoup.new_string()
+~~~ python
+soup = BeautifulSoup("<b></b>")
+tag = soup.b
+tag.append("Hello")
+new_string = soup.new_string(" there")
+tag.append(new_string)
+tag
+# <b>Hello there.</b>
+tag.contents
+# [u'Hello', u' there']
+~~~
+如果想要创建一段注释,或 NavigableString 的任何子类,将子类作为 new_string() 方法的第二个参数传入
+~~~ python
+from bs4 import Comment
+new_comment = soup.new_string("Nice to see you.", Comment)
+tag.append(new_comment)
+tag
+# <b>Hello there<!--Nice to see you.--></b>
+tag.contents
+# [u'Hello', u' there', u'Nice to see you.']
+~~~
+## insert()
+Tag.insert() 方法与 Tag.append() 方法类似,区别是不会把新元素添加到父节点 .contents 属性的最后,而是把元素插入到指定的位置.与Python列表总的 .insert() 方法的用法下同
+~~~ python
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup)
+tag = soup.a
+
+tag.insert(1, "but did not endorse ")
+tag
+# <a href="http://example.com/">I linked to but did not endorse <i>example.com</i></a>
+tag.contents
+# [u'I linked to ', u'but did not endorse', <i>example.com</i>]
+~~~
+## insert_before() 和 insert_after()
+insert_before() 方法在当前tag或文本节点前插入内容
+insert_after() 方法在当前tag或文本节点后插入内容
+## clear()
+Tag.clear() 方法移除当前tag的内容
+~~~ python
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup)
+tag = soup.a
+
+tag.clear()
+tag
+# <a href="http://example.com/"></a>
+~~~
+## extract()
+PageElement.extract() 方法将当前tag移除文档树,并作为方法结果返回
+## decompose()
+Tag.decompose() 方法将当前节点移除文档树并完全销毁
+## replace_with()
+PageElement.replace_with() 方法移除文档树中的某段内容,并用新tag或文本节点替代它
+## wrap()
+PageElement.wrap() 方法可以对指定的tag元素进行包装 [8] ,并返回包装后的结果
+## unwrap()
+Tag.unwrap() 方法与 wrap() 方法相反.将移除tag内的所有tag标签,该方法常被用来进行标记的解包
+与 replace_with() 方法相同, unwrap() 方法返回被移除的tag
+# 输出
+## 格式化输出
+prettify() 方法将Beautiful Soup的文档树格式化后以Unicode编码输出,每个XML/HTML标签都独占一行
+BeautifulSoup 对象和它的tag节点都可以调用 prettify() 方法
+~~~ python
+print(soup.a.prettify())
+# <a href="http://example.com/">
+#  I linked to
+#  <i>
+#   example.com
+#  </i>
+# </a>
+~~~
+## 压缩输出
+如果只想得到结果字符串,不重视格式,那么可以对一个 BeautifulSoup 对象或 Tag 对象使用Python的 unicode() 或 str() 方法
+str() 方法返回UTF-8编码的字符串,可以指定 编码 的设置
+还可以调用 encode() 方法获得字节码或调用 decode() 方法获得Unicode
+~~~ python
+str(soup)
+# '<html><head></head><body><a href="http://example.com/">I linked to <i>example.com</i></a></body></html>'
+
+unicode(soup.a)
+# u'<a href="http://example.com/">I linked to <i>example.com</i></a>'
+~~~
+## 输出格式
+Beautiful Soup输出是会将HTML中的特殊字符转换成Unicode,比如“&lquot;”
+如果将文档转换成字符串,Unicode编码会被编码成UTF-8.这样就无法正确显示HTML特殊字符了
+~~~ python
+soup = BeautifulSoup("&ldquo;Dammit!&rdquo; he said.")
+unicode(soup)
+# u'<html><head></head><body>\u201cDammit!\u201d he said.</body></html>'
+str(soup)
+# '<html><head></head><body>\xe2\x80\x9cDammit!\xe2\x80\x9d he said.</body></html>'
+~~~
+## get_text()
+这个方法获取到tag中包含的所有文版内容包括子孙tag中的内容,并将结果作为Unicode字符串返回
+~~~ python
+markup = '<a href="http://example.com/">\nI linked to <i>example.com</i>\n</a>'
+soup = BeautifulSoup(markup)
+soup.get_text()
+u'\nI linked to example.com\n'
+soup.i.get_text()
+u'example.com'
+~~~
+可以通过参数指定tag的文本内容的分隔符
+~~~ python
+# soup.get_text("|")
+u'\nI linked to |example.com|\n'
+~~~
+还可以去除获得文本内容的前后空白
+~~~ python
+# soup.get_text("|", strip=True)
+u'I linked to|example.com'
+~~~
+或者使用 .stripped_strings 生成器,获得文本列表后手动处理列表
+~~~ python
+[text for text in soup.stripped_strings]
+# [u'I linked to', u'example.com']
 ~~~
 
 
