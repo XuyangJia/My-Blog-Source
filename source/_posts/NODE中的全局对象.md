@@ -2,8 +2,9 @@
 title: NODE中的全局对象
 date: 2019-03-26 11:13:07
 categories:
-- Node
+- Javascript
 tags:
+- Node
 ---
 在浏览器中全局对象是**window**，在Node.js中全局对象是**global**。
 所有**全局变量**都是**全局对象**的属性。
