@@ -1,7 +1,10 @@
 ---
 title: Javascript设计模式
 date: 2019-04-01 11:40:08
-tags:
+categories:
+- Javascript
+tags: 
+- Design pattern
 ---
 设计模式（Design pattern）是一套被反复使用的、多数人知晓的、经过分类编目的、代码设计经验的总结。使用设计模式是为了重用代码、让代码更容易被他人理解、保证代码可靠性。
 这些模式可以分为三大类：创建型模式（Creational Patterns）、结构型模式（Structural Patterns）、行为型模式（Behavioral Patterns）。
